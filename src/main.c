@@ -213,7 +213,7 @@ void insertionSortBenchmarkMediumCase(
         total_time = ((double) timer_end.tv_sec + 1e-9 * timer_end.tv_nsec) - ((double)timer_start.tv_sec + 1e-9 * timer_start.tv_nsec);
         
         fprintf(benchmarkInsertion, "%d,%.8f\n", input, total_time);
-        printf("INSERTION SORT: Loop %d de 50 concluido - MEDIO CASO\n", i + 1);
+        printf("%d - INSERTION SORT: Loop %d de 50 concluido - MEDIO CASO\n", input, i + 1);
 
         // Desordena o vetor novamente
         fillArrayRandom(Array, input);
@@ -244,9 +244,8 @@ void insertionSortBenchmarkWorstCase(
         total_time = ((double) timer_end.tv_sec + 1e-9 * timer_end.tv_nsec) - ((double)timer_start.tv_sec + 1e-9 * timer_start.tv_nsec);
         
         fprintf(benchmarkInsertion, "%d,%.8f\n", input, total_time);
-        printf("INSERTION SORT: Loop %d de 50 concluido - PIOR CASO\n", i + 1);
+        printf("%d - INSERTION SORT: Loop %d de 50 concluido - PIOR CASO\n", input, i + 1);
 
-        fillArrayInverted(Array, input);
     }
 }
 
@@ -271,11 +270,8 @@ int* fillArrayRandom(int *Array, int input){
 }
 
 int* fillArrayInverted(int *Array, int input){
-    int counter = input;
-
-    for (int j = input; j > 0; j--){
-        Array[j] = counter;
-        counter--;
+    for (int j = 0; j < input; j++) {
+        Array[j] = input - j;
     }
 
     return Array;
@@ -344,12 +340,12 @@ int main(){
         int *Array = malloc(sizeof(int) * n );
 
         insertionSortBenchmarkBestCase(benchmarkInsertionBestCase, n, timer_start, timer_end, Array);
-        // insertionSortBenchmarkMediumCase(benchmarkMergeMediumCase, n, timer_start, timer_end, Array);
-        // insertionSortBenchmarkWorstCase(benchmarkMergeWorstCase, n, timer_start, timer_end, Array);
+        insertionSortBenchmarkMediumCase(benchmarkInsertionMediumCase, n, timer_start, timer_end, Array);
+        insertionSortBenchmarkWorstCase(benchmarkInsertionWorstCase, n, timer_start, timer_end, Array);
 
         mergeSortBenchmarkBestCase(benchmarkMergeBestCase, n, timer_start, timer_end, Array);
-        // mergeSortBenchmarkMediumCase(benchmarkMergeMediumCase, n, timer_start, timer_end, Array);
-        // mergeSortBenchmarkWorstCase(benchmarkMergeWorstCase, n, timer_start, timer_end, Array);
+        mergeSortBenchmarkMediumCase(benchmarkMergeMediumCase, n, timer_start, timer_end, Array);
+        mergeSortBenchmarkWorstCase(benchmarkMergeWorstCase, n, timer_start, timer_end, Array);
 
         free(Array);
     }
