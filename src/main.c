@@ -12,6 +12,9 @@ int *fillArraySorted(int *Array, int input);
 int *fillArrayRandom(int *Array, int input);
 int *fillArrayInverted(int *Array, int input);
 
+const char* entriesTitle = "Entradas";
+const char* timeTitle = "Tempo";
+
 
 void merge(int arr[], int l, int m, int r){
     
@@ -87,6 +90,10 @@ void mergeSortBenchmarkBestCase(
         total_time = ((double) timer_end.tv_sec + 1e-9 * timer_end.tv_nsec) - ((double)timer_start.tv_sec + 1e-9 * timer_start.tv_nsec);
         
         fprintf(benchmarkInsertion, "%d,%.8f\n", input, total_time);
+        if (i == 49){
+            fprintf(benchmarkInsertion, "%s, %s (s)\n", entriesTitle, timeTitle);
+        }
+        fflush(benchmarkInsertion);
         printf("%d - MERGE SORT: Loop %d de 50 concluido - MELHOR CASO\n",input, i + 1);
     }
 }
@@ -114,6 +121,10 @@ void mergeSortBenchmarkMediumCase(
         total_time = ((double) timer_end.tv_sec + 1e-9 * timer_end.tv_nsec) - ((double)timer_start.tv_sec + 1e-9 * timer_start.tv_nsec);
         
         fprintf(benchmarkInsertion, "%d,%.8f\n", input, total_time);
+        if (i == 49){
+            fprintf(benchmarkInsertion, "%s, %s (s)\n", entriesTitle, timeTitle);
+        }
+        fflush(benchmarkInsertion);
         printf("%d - MERGE SORT: Loop %d de 50 concluido - MEDIO CASO\n",input, i + 1);
     }
 }
@@ -141,6 +152,10 @@ void mergeSortBenchmarkWorstCase(
         total_time = ((double) timer_end.tv_sec + 1e-9 * timer_end.tv_nsec) - ((double)timer_start.tv_sec + 1e-9 * timer_start.tv_nsec);
         
         fprintf(benchmarkInsertion, "%d,%.8f\n", input, total_time);
+        if (i == 49){
+            fprintf(benchmarkInsertion, "%s, %s (s)\n", entriesTitle, timeTitle);
+        }
+        fflush(benchmarkInsertion);
         printf("%d - MERGE SORT: Loop %d de 50 concluido - PIOR CASO\n",input, i + 1);
     }
 }
@@ -183,6 +198,10 @@ void insertionSortBenchmarkBestCase(
         total_time = ((double) timer_end.tv_sec + 1e-9 * timer_end.tv_nsec) - ((double)timer_start.tv_sec + 1e-9 * timer_start.tv_nsec);
         
         fprintf(benchmarkInsertion, "%d,%.8f\n", input, total_time);
+        if (i == 49){
+            fprintf(benchmarkInsertion, "%s, %s (s)\n", entriesTitle, timeTitle);
+        }
+        fflush(benchmarkInsertion);
         printf("%d - INSERTION SORT: Loop %d de 50 concluido - MELHOR CASO\n",input, i + 1);
     }
 }
@@ -213,6 +232,10 @@ void insertionSortBenchmarkMediumCase(
         total_time = ((double) timer_end.tv_sec + 1e-9 * timer_end.tv_nsec) - ((double)timer_start.tv_sec + 1e-9 * timer_start.tv_nsec);
         
         fprintf(benchmarkInsertion, "%d,%.8f\n", input, total_time);
+        if (i == 49){
+            fprintf(benchmarkInsertion, "%s, %s (s)\n", entriesTitle, timeTitle);
+        }
+        fflush(benchmarkInsertion);
         printf("%d - INSERTION SORT: Loop %d de 50 concluido - MEDIO CASO\n", input, i + 1);
 
         // Desordena o vetor novamente
@@ -244,6 +267,10 @@ void insertionSortBenchmarkWorstCase(
         total_time = ((double) timer_end.tv_sec + 1e-9 * timer_end.tv_nsec) - ((double)timer_start.tv_sec + 1e-9 * timer_start.tv_nsec);
         
         fprintf(benchmarkInsertion, "%d,%.8f\n", input, total_time);
+        if (i == 49){
+            fprintf(benchmarkInsertion, "%s, %s (s)\n", entriesTitle, timeTitle);
+        }
+        fflush(benchmarkInsertion);
         printf("%d - INSERTION SORT: Loop %d de 50 concluido - PIOR CASO\n", input, i + 1);
 
     }
@@ -307,10 +334,6 @@ int main(){
     FILE *benchmarkMergeWorstCase;
     benchmarkMergeWorstCase = fopen("../data/merge/benchmark_merge_worst_case.csv", "w");
 
-    // Cabecalho
-    char* entriesTitle = "Entradas";
-    char* timeTitle = "Tempo";
-
     // Escrevendo cabecalho dos arquivos INSERTION
     fprintf(benchmarkInsertionBestCase, "%s, %s (s)\n", entriesTitle, timeTitle);
     fprintf(benchmarkInsertionMediumCase, "%s, %s (s)\n", entriesTitle, timeTitle);
@@ -360,5 +383,4 @@ int main(){
 
     return 0;
 }
-
 
