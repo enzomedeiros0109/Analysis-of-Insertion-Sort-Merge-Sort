@@ -40,7 +40,7 @@ python graphics.py
 │   ├── main.c                 # Benchmarks and raw CSV generation
 │   ├── table.py               # Statistics, CSV tables, and table images
 │   └── graphics.py            # Comparative charts
-├── data/                      # Generated locally; ignored by Git
+├── data/                      # Benchmark data, tables, and charts
 │   ├── insertion/             # Raw Insertion Sort measurements
 │   ├── merge/                 # Raw Merge Sort measurements
 │   ├── tables/
@@ -52,3 +52,7 @@ python graphics.py
 ├── requirements.txt           # Python dependencies
 └── README.md
 ```
+
+## Benchmark environment
+
+> **Note:** The machine used for this project reports a 13th Gen Intel Core i5-13420H (6 cores, 12 threads), Ubuntu 26.04.1 LTS running in WSL2, and about 11 GiB of RAM available to Linux. GCC 15.2.0 installed. CPU performance, available memory, the operating environment, compiler settings, and background activity directly affect the execution times in the benchmark data included in this repository. Running the benchmarks on another computer may produce different results.
