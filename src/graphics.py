@@ -28,29 +28,26 @@ CENARIOS = {
 
 def ler_tabela(arquivo):
     """Lê médias e os dois limites do IC de 95% do CSV da tabela."""
-    tabela = pd.read_csv(arquivo).set_index("Entrada")
-    colunas = {"Média (s)", "Intervalo de confiança 95% (s)"}
+    tabela = pd.read_csv(arquivo, header=[0, 1])
+    tabela.columns = [
+        subtitulo if titulo == "Intervalo de Confiança 95% (s)" else titulo
+        for titulo, subtitulo in tabela.columns
+    ]
+    tabela = tabela.rename(columns={
+        "inferior": "Limite inferior", "superior": "Limite superior",
+    }).set_index("Entrada")
+    colunas = {"Média (s)", "Limite inferior", "Limite superior"}
     if not colunas.issubset(tabela.columns):
         raise ValueError(f"Colunas necessárias ausentes em {arquivo}.")
     if tabela.index.has_duplicates:
         raise ValueError(f"Entradas repetidas em {arquivo}.")
 
-    limites = []
     for entrada, linha in tabela.iterrows():
-        try:
-            inferior, superior = (
-                float(valor.strip())
-                for valor in linha["Intervalo de confiança 95% (s)"].strip("[]").split(";")
-            )
-        except (AttributeError, TypeError, ValueError) as erro:
-            raise ValueError(f"IC de 95% inválido em {arquivo}, entrada {entrada}.") from erro
+        inferior = linha["Limite inferior"]
+        superior = linha["Limite superior"]
         media = linha["Média (s)"]
         if not 0 < inferior <= media <= superior:
             raise ValueError(f"IC de 95% inconsistente em {arquivo}, entrada {entrada}.")
-        limites.append((inferior, superior))
-
-    tabela["Limite inferior"] = [par[0] for par in limites]
-    tabela["Limite superior"] = [par[1] for par in limites]
     return tabela
 
 

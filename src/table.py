@@ -10,6 +10,7 @@ import sys
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+from matplotlib.patches import Rectangle
 import pandas as pd
 from scipy.stats import t
 
@@ -22,6 +23,12 @@ CENARIOS = {
     "worst_case": "Pior caso",
 }
 MEDICOES_ESPERADAS = 50
+TITULO_IC = "Intervalo de Confiança 95% (s)"
+CABECALHOS = [
+    ("Entrada", ""), ("Média (s)", ""), ("Desvio padrão (s)", ""),
+    (TITULO_IC, "inferior"), (TITULO_IC, "superior"),
+    ("Mínimo (s)", ""), ("Máximo (s)", ""),
+]
 
 
 def ler_medicoes(arquivo):
@@ -70,13 +77,8 @@ def calcular_estatisticas(dados):
         * tabela["Desvio"]
         / tabela["Medicoes"].pow(0.5)
     )
-    limite_inferior = tabela["Media"] - margem
-    limite_superior = tabela["Media"] + margem
-    tabela["Intervalo de confiança 95% (s)"] = [
-        f"[{inferior:.10g}; {superior:.10g}]"
-        if pd.notna(inferior) and pd.notna(superior) else "—"
-        for inferior, superior in zip(limite_inferior, limite_superior)
-    ]
+    tabela["inferior"] = tabela["Media"] - margem
+    tabela["superior"] = tabela["Media"] + margem
     tabela = tabela.rename(columns={
         "n": "Entrada",
         "Media": "Média (s)",
@@ -86,53 +88,73 @@ def calcular_estatisticas(dados):
     })
     return tabela[[
         "Entrada", "Média (s)", "Desvio padrão (s)",
-        "Intervalo de confiança 95% (s)", "Mínimo (s)", "Máximo (s)",
+        "inferior", "superior", "Mínimo (s)", "Máximo (s)",
     ]]
 
 
 def salvar_imagem(tabela, arquivo, nome_algoritmo, nome_cenario):
-    """Renderiza as estatisticas em uma imagem PNG legivel."""
-    titulos = [
-        "Entrada", "Média (s)", "Desvio padrão (s)",
-        "Intervalo de confiança 95% (s)", "Mínimo (s)", "Máximo (s)",
-    ]
+    """Renderiza um cabeçalho de dois níveis, agrupando os limites do IC."""
     linhas = []
     for _, linha in tabela.iterrows():
         linhas.append([
             f"{int(linha['Entrada']):,}".replace(",", "."),
             *(
-                linha[coluna] if isinstance(linha[coluna], str)
-                else "—" if pd.isna(linha[coluna]) else f"{linha[coluna]:.8g}"
+                "—" if pd.isna(linha[coluna]) else f"{linha[coluna]:.8g}"
                 for coluna in tabela.columns[1:]
             ),
         ])
 
-    altura = max(4.8, 1.65 + 0.45 * (len(linhas) + 1))
+    altura = max(4.8, 1.25 + 0.45 * (len(linhas) + 2))
     figura, eixo = plt.subplots(figsize=(16, altura))
+    figura.subplots_adjust(left=0.03, right=0.97, bottom=0.04, top=0.87)
     eixo.axis("off")
     figura.text(
         0.5, 0.94, f"{nome_algoritmo} — {nome_cenario}",
         ha="center", va="center", fontsize=19, fontweight="bold", color="#18334f",
     )
-    imagem = eixo.table(
-        cellText=linhas,
-        colLabels=titulos,
-        cellLoc="center",
-        colLoc="center",
-        colWidths=[0.10, 0.14, 0.16, 0.30, 0.15, 0.15],
-        bbox=[0.02, 0.07, 0.96, 0.79],
+    larguras = [0.10, 0.14, 0.16, 0.15, 0.15, 0.15, 0.15]
+    posicoes = [0]
+    for largura in larguras:
+        posicoes.append(posicoes[-1] + largura)
+    altura_linha = 1 / (len(linhas) + 2)
+
+    def desenhar_celula(coluna, y, largura, altura, texto, cor, cabecalho=False):
+        x = posicoes[coluna]
+        eixo.add_patch(Rectangle(
+            (x, y), largura, altura,
+            facecolor=cor, edgecolor="#d3dce5", linewidth=0.7,
+            transform=eixo.transAxes, clip_on=False,
+        ))
+        eixo.text(
+            x + largura / 2, y + altura / 2, texto,
+            ha="center", va="center", fontsize=11.5,
+            color="white" if cabecalho else "#172638",
+            fontweight="bold" if cabecalho else "normal",
+            transform=eixo.transAxes,
+        )
+
+    # Os outros títulos ocupam as duas linhas de cabeçalho.
+    for coluna in (0, 1, 2, 5, 6):
+        desenhar_celula(
+            coluna, 1 - 2 * altura_linha, larguras[coluna], 2 * altura_linha,
+            CABECALHOS[coluna][0], "#183b59", cabecalho=True,
+        )
+    desenhar_celula(
+        3, 1 - altura_linha, larguras[3] + larguras[4], altura_linha,
+        TITULO_IC, "#183b59", cabecalho=True,
     )
-    imagem.auto_set_font_size(False)
-    imagem.set_fontsize(11.5)
-    for (indice_linha, _), celula in imagem.get_celld().items():
-        celula.set_edgecolor("#d3dce5")
-        celula.set_linewidth(0.7)
-        if indice_linha == 0:
-            celula.set_facecolor("#183b59")
-            celula.get_text().set_color("white")
-            celula.get_text().set_fontweight("bold")
-        else:
-            celula.set_facecolor("#ffffff" if indice_linha % 2 else "#f4f7fa")
+    for coluna in (3, 4):
+        desenhar_celula(
+            coluna, 1 - 2 * altura_linha, larguras[coluna], altura_linha,
+            CABECALHOS[coluna][1], "#183b59", cabecalho=True,
+        )
+    for indice, linha in enumerate(linhas):
+        cor = "#ffffff" if indice % 2 == 0 else "#f4f7fa"
+        for coluna, texto in enumerate(linha):
+            desenhar_celula(
+                coluna, 1 - (indice + 3) * altura_linha,
+                larguras[coluna], altura_linha, texto, cor,
+            )
     figura.savefig(arquivo, dpi=180, facecolor="white")
     plt.close(figura)
 
@@ -167,7 +189,9 @@ def gerar_tabelas(pasta_dados=RAIZ / "data", pasta_saida=RAIZ / "data" / "tables
 
             pasta_cenario = pasta_saida / algoritmo / cenario.removesuffix("_case")
             pasta_cenario.mkdir(parents=True, exist_ok=True)
-            tabela.to_csv(
+            tabela_csv = tabela.copy()
+            tabela_csv.columns = pd.MultiIndex.from_tuples(CABECALHOS)
+            tabela_csv.to_csv(
                 pasta_cenario / "tabela.csv",
                 index=False,
                 float_format="%.10g",
