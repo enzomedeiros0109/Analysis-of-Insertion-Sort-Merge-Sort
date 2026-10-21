@@ -4,7 +4,6 @@ Execute da raiz do projeto: .venv/bin/python src/graphics.py
 """
 
 from pathlib import Path
-import shutil
 
 import matplotlib
 matplotlib.use("Agg")
@@ -52,7 +51,7 @@ def ler_tabela(arquivo):
 
 
 def gerar_grafico(cenario, nome_cenario, pasta_tabelas, pasta_graficos):
-    """Cria um gráfico comparativo e o salva nas duas pastas do cenário."""
+    """Cria um gráfico comparativo e o salva na pasta do cenário."""
     dados = {
         algoritmo: ler_tabela(pasta_tabelas / algoritmo / cenario / "tabela.csv")
         for algoritmo in ALGORITMOS
@@ -114,14 +113,12 @@ def gerar_grafico(cenario, nome_cenario, pasta_tabelas, pasta_graficos):
     eixo.tick_params(axis="both", labelsize=10)
     figura.tight_layout()
 
-    pastas = [pasta_graficos / algoritmo / cenario for algoritmo in ALGORITMOS]
-    for pasta in pastas:
-        pasta.mkdir(parents=True, exist_ok=True)
-    arquivo_principal = pastas[0] / "grafico.png"
-    figura.savefig(arquivo_principal, dpi=180, facecolor="white")
+    pasta = pasta_graficos / cenario
+    pasta.mkdir(parents=True, exist_ok=True)
+    arquivo = pasta / "grafico.png"
+    figura.savefig(arquivo, dpi=180, facecolor="white")
     plt.close(figura)
-    shutil.copyfile(arquivo_principal, pastas[1] / "grafico.png")
-    print(f"{nome_cenario}: {pastas[0]} e {pastas[1]}")
+    print(f"{nome_cenario}: {arquivo}")
 
 
 def gerar_graficos(pasta_tabelas=PASTA_TABELAS, pasta_graficos=PASTA_GRAFICOS):
