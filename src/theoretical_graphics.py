@@ -99,7 +99,7 @@ def generate_chart(algorithm, case, tables_directory, graphics_directory):
 
     output_directory = graphics_directory / f"{algorithm}_theoretical"
     output_directory.mkdir(parents=True, exist_ok=True)
-    output_file = output_directory / f"{case}_case.png"
+    output_file = output_directory / f"graph_{algorithm}_theoretical_{case}.png"
     figure.savefig(output_file, dpi=180, facecolor="white")
     plt.close(figure)
     print(f"{algorithm_name} — {CASES[case]}: {output_file}")

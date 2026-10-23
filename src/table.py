@@ -196,7 +196,8 @@ def gerar_tabelas(pasta_dados=RAIZ / "data", pasta_saida=RAIZ / "data" / "tables
                 index=False,
                 float_format="%.10g",
             )
-            salvar_imagem(tabela, pasta_cenario / "tabela.png", nome_algoritmo, nome_cenario)
+            nome_imagem = f"table_{algoritmo}_{cenario.removesuffix('_case')}.png"
+            salvar_imagem(tabela, pasta_cenario / nome_imagem, nome_algoritmo, nome_cenario)
             print(f"\n{nome_algoritmo} — {nome_cenario} (tempos em segundos)")
             print(tabela.to_string(
                 index=False, float_format=lambda valor: f"{valor:.8g}",

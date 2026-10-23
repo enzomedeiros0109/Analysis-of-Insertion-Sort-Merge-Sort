@@ -115,7 +115,7 @@ def gerar_grafico(cenario, nome_cenario, pasta_tabelas, pasta_graficos):
 
     pasta = pasta_graficos / cenario
     pasta.mkdir(parents=True, exist_ok=True)
-    arquivo = pasta / "grafico.png"
+    arquivo = pasta / f"graph_insertion_merge_{cenario}.png"
     figura.savefig(arquivo, dpi=180, facecolor="white")
     plt.close(figura)
     print(f"{nome_cenario}: {arquivo}")
