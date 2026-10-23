@@ -1,6 +1,6 @@
 # Insertion Sort and Merge Sort Analysis
 
-This project compares the execution times of Insertion Sort and Merge Sort in three scenarios: best case, average case, and worst case. The C program measures each combination of algorithm and input size 50 times. The Python scripts calculate the mean, standard deviation, 95% confidence interval, minimum, and maximum, then generate tables and comparison charts.
+This project compares the execution times of Insertion Sort and Merge Sort in three scenarios: best case, average case, and worst case. The C program measures each combination of algorithm and input size 50 times. The Python scripts calculate the mean, standard deviation, 95% confidence interval, minimum, and maximum, then generate tables, comparison charts, and per-algorithm theoretical-model charts.
 
 ## How to run
 
@@ -24,12 +24,13 @@ python -m pip install -r requirements.txt
 
 On Ubuntu/Debian, if creating the environment fails because `ensurepip` is missing, install `python3-venv` with `sudo apt install python3-venv`.
 
-Enter `src` and run the table script before the chart script:
+Enter `src` and run the table script before the two chart scripts:
 
 ```bash
 cd src
 python table.py
 python graphics.py
+python theoretical_graphics.py
 ```
 
 ## Project structure
@@ -37,18 +38,24 @@ python graphics.py
 ```text
 .
 ├── src/
-│   ├── main.c                 # Benchmarks and raw CSV generation
-│   ├── table.py               # Statistics, CSV tables, and table images
-│   └── graphics.py            # Comparative charts
+│   ├── main.c                  # Benchmarks and raw CSV generation
+│   ├── table.py                # Statistics, CSV tables, and table images
+│   ├── graphics.py             # Comparative charts
+│   └── theoretical_graphics.py # Measured times and theoretical models
 ├── data/                      # Benchmark data, tables, and charts
 │   ├── insertion/             # Raw Insertion Sort measurements
 │   ├── merge/                 # Raw Merge Sort measurements
 │   ├── tables/
-│   │   └── {insertion,merge}/{best,medium,worst}/
+│   │   └── {algorithm}/{case}/
 │   │       ├── tabela.csv
-│   │       └── tabela.png
+│   │       └── table_{algorithm}_{case}.png
 │   └── graphics/
-│       └── {insertion,merge}/{best,medium,worst}/grafico.png
+│       ├── {case}/
+│       │   └── graph_insertion_merge_{case}.png
+│       ├── insertion_theoretical/
+│       │   └── graph_insertion_theoretical_{case}.png
+│       └── merge_theoretical/
+│           └── graph_merge_theoretical_{case}.png
 ├── requirements.txt           # Python dependencies
 └── README.md
 ```
