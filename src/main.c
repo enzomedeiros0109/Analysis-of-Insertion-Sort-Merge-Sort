@@ -87,6 +87,7 @@ void mergeSortBenchmarkBestCase(
 
         clock_gettime(CLOCK_MONOTONIC, &timer_end);
 
+        // Pega os segundos e os nanos segundos para total_time ter casas decimais
         total_time = ((double) timer_end.tv_sec + 1e-9 * timer_end.tv_nsec) - ((double)timer_start.tv_sec + 1e-9 * timer_start.tv_nsec);
         
         fprintf(benchmarkInsertion, "%d,%.8f\n", input, total_time);
