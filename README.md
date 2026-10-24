@@ -42,9 +42,9 @@ python theoretical_graphics.py
 │   ├── table.py                # Statistics, CSV tables, and table images
 │   ├── graphics.py             # Comparative charts
 │   └── theoretical_graphics.py # Measured times and theoretical models
-├── data/                      # Benchmark data, tables, and charts
-│   ├── insertion/             # Raw Insertion Sort measurements
-│   ├── merge/                 # Raw Merge Sort measurements
+├── data/                       # Benchmark data, tables, and charts
+│   ├── insertion/              # Raw Insertion Sort measurements
+│   ├── merge/                  # Raw Merge Sort measurements
 │   ├── tables/
 │   │   └── {algorithm}/{case}/
 │   │       ├── tabela.csv
@@ -56,7 +56,9 @@ python theoretical_graphics.py
 │       │   └── graph_insertion_theoretical_{case}.png
 │       └── merge_theoretical/
 │           └── graph_merge_theoretical_{case}.png
-├── requirements.txt           # Python dependencies
+├── docs/
+│   └── Atividade_Prática_de_implementação_Insertion_Sort_e_Merge_Sort.pdf
+├── requirements.txt            # Python dependencies
 └── README.md
 ```
 
